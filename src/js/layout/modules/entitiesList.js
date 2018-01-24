@@ -6,7 +6,6 @@ require('jquery-ui/ui/widgets/button');
 require('jquery-ui/ui/widgets/checkboxradio');
 require('jquery-ui/ui/widgets/controlgroup');
 require('jquery-contextmenu');
-    
 /**
  * @class EntitiesList
  * @fires Writer#entitiesListInitialized
@@ -34,17 +33,58 @@ function EntitiesList(config) {
             '</div>'+
         '</div>');
     
-    // TODO remove context menu IDs
-    // TODO background icons have no dimensions
-    $(document.body).append(''+
-        '<div id="'+id+'_contextMenu" class="contextMenu" style="display: none;">'+
-            '<ul>'+
-                '<li id="editEntity"><ins style="background:url('+w.cwrcRootUrl+'img/tag_blue_edit.png) center center no-repeat;" />Edit Entity</li>'+
-                '<li id="removeEntity"><ins style="background:url('+w.cwrcRootUrl+'img/cross.png) center center no-repeat;" />Remove Entity</li>'+
-                '<li class="separator" id="copyEntity"><ins style="background:url('+w.cwrcRootUrl+'img/tag_blue_copy.png) center center no-repeat;" />Copy Entity</li>'+
-            '</ul>'+
-        '</div>'
-    );
+    w.utilities.addCSS('css/jquery.contextMenu.css');
+    if (w.isReadOnly !== true) {
+        $.contextMenu({
+            selector: '#'+id+' ul.entitiesList > li',
+            className: 'cwrc',
+            zIndex: 10,
+            items: {
+                editEntity: {
+                    name: 'Edit Entity',
+                    icon: function(opt, $itemElement, itemKey, item) {
+                        $itemElement.css({
+                            'background-image': 'url('+w.cwrcRootUrl+'img/tag_blue_edit.png)',
+                            'background-repeat': 'no-repeat',
+                            'background-position': '8px 4px'
+                        });
+                    },
+                    callback: function(key, options) {
+                        var tag = options.$trigger.attr('name');
+                        w.tagger.editTag(tag);
+                    }
+                },
+                removeEntity: {
+                    name: 'Remove Entity',
+                    icon: function(opt, $itemElement, itemKey, item) {
+                        $itemElement.css({
+                            'background-image': 'url('+w.cwrcRootUrl+'img/tag_blue_delete.png)',
+                            'background-repeat': 'no-repeat',
+                            'background-position': '8px 4px'
+                        });
+                    },
+                    callback: function(key, options) {
+                        var tag = options.$trigger.attr('name');
+                        w.tagger.removeEntity(tag);
+                    }
+                },
+                copyEntity: {
+                    name: 'Copy Entity',
+                    icon: function(opt, $itemElement, itemKey, item) {
+                        $itemElement.css({
+                            'background-image': 'url('+w.cwrcRootUrl+'img/tag_blue_copy.png)',
+                            'background-repeat': 'no-repeat',
+                            'background-position': '8px 4px'
+                        });
+                    },
+                    callback: function(key, options) {
+                        var tag = options.$trigger.attr('name');
+                        w.tagger.copyTag(tag);
+                    }
+                }
+            }
+        });
+    }
     
     var $entities = $('#'+id);
     
@@ -189,44 +229,6 @@ function EntitiesList(config) {
             $(this).removeClass('over');
             w.entitiesManager.highlightEntity(this.getAttribute('name'), null, true);
         });
-        
-        if (w.isReadOnly !== true) {
-            $entities.find('ul.entitiesList > li').contextMenu(id+'_contextMenu', {
-                bindings: {
-                    'editEntity': function(tag) {
-                        w.tagger.editTag($(tag).attr('name'));
-                    },
-                    'removeEntity': function(tag) {
-                        w.tagger.removeEntity($(tag).attr('name'));
-                    },
-                    'copyEntity': function(tag) {
-                        w.tagger.copyTag($(tag).attr('name'));
-                    }
-                },
-                shadow: false,
-                menuStyle: {
-                    backgroundColor: '#FFFFFF',
-                    border: '1px solid #D4D0C8',
-                    boxShadow: '1px 1px 2px #CCCCCC',
-                    padding: '0px'
-                },
-                itemStyle: {
-                    fontFamily: 'Tahoma,Verdana,Arial,Helvetica',
-                    fontSize: '11px',
-                    color: '#000',
-                    lineHeight: '20px',
-                    padding: '0px',
-                    cursor: 'pointer',
-                    textDecoration: 'none',
-                    border: 'none'
-                },
-                itemHoverStyle: {
-                    color: '#000',
-                    backgroundColor: '#DBECF3',
-                    border: 'none'
-                }
-            });
-        }
         
         if (w.entitiesManager.getCurrentEntity()) {
             $entities.find('ul.entitiesList  > li[name="'+w.entitiesManager.getCurrentEntity()+'"]').addClass('selected').find('div[class="info"]').show();

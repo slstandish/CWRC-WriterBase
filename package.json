@@ -24,18 +24,18 @@
   },
   "homepage": "https://github.com/cwrc/CWRC-WriterBase#readme",
   "browser": {
+    "dialogForm": "./src/js/dialogs/dialogForm.js",
     "objtree": "./src/js/lib/objtree/ObjTree.js",
-    "jquery-watermark": "./src/js/lib/jquery/plugins/jquery.watermark.min.js",
-    "jquery-contextmenu": "./src/js/lib/jquery/plugins/jquery.contextmenu.min.js",
     "jquery-popup": "./src/js/lib/jquery/plugins/jquery.popup.js",
-    "jquery-xpath": "./src/js/lib/jquery/plugins/jquery.xpath.js",
-    "dialogForm": "./src/js/dialogs/dialogForm.js"
+    "jquery-watermark": "./src/js/lib/jquery/plugins/jquery.watermark.min.js",
+    "jquery-xpath": "./src/js/lib/jquery/plugins/jquery.xpath.js"
   },
   "dependencies": {
     "bootstrap": "3.3.7",
     "css-parse": "^2.0.0",
     "css-stringify": "^2.0.0",
     "jquery": "3.2.1",
+    "jquery-contextmenu": "2.6.3",
     "jquery-ui": "1.12",
     "jstree": "3.3.3",
     "layout": "github:ajmacdonald/layout",
@@ -78,6 +78,7 @@
     "wikidata-entity-lookup": "^1.1.0"
   },
   "scripts": {
+    "copy:module-css": "copyfiles -f node_modules/jstree/dist/themes/default/* src/css/jstree/themes/cwrc/ && copyfiles -f node_modules/jquery-contextmenu/dist/jquery.contextMenu.css src/css/",
     "semantic-release": "semantic-release pre && npm publish && semantic-release post",
     "cm": "git-cz",
     "precommit": "npm run test && npm run check-coverage",
