@@ -876,3 +876,8 @@ div.mceDropDown {
 .ui-icon-help {
     cursor: pointer;
 }
+
+/* jquery contextmenu overrides */
+.cwrc.context-menu-list {
+	font-family: Lato,Arial,Helvetica,sans-serif; 
+}
